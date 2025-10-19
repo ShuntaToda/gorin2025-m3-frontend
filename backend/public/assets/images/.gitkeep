@@ -1,0 +1,3 @@
+# このディレクトリには画像ファイル（1.jpg, 2.jpg, 3.jpg）を配置してください
+# バックエンドサーバーが http://localhost:3000/assets/images/1.jpg として提供します
+

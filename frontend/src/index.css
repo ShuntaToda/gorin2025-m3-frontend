@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* カスタムアニメーション */
+@layer utilities {
+
+  /* フェードアウトアニメーション（テーマB用） */
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  .animate-fade-out {
+    animation: fade-out 500ms ease-out forwards;
+  }
+
+  /* フェードインアニメーション（テーマB用） */
+  @keyframes fade-in-photo {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in-photo 500ms ease-in forwards;
+  }
+
+  /* ぼかしアウトアニメーション（テーマC用） */
+  @keyframes blur-out {
+    from {
+      filter: blur(0px);
+      opacity: 1;
+    }
+
+    to {
+      filter: blur(10px);
+      opacity: 0;
+    }
+  }
+
+  .animate-blur-out {
+    animation: blur-out 500ms ease-out forwards;
+  }
+
+  /* ぼかしインアニメーション（テーマC用） */
+  @keyframes blur-in {
+    from {
+      filter: blur(10px);
+      opacity: 0;
+    }
+
+    to {
+      filter: blur(0px);
+      opacity: 1;
+    }
+  }
+
+  .animate-blur-in {
+    animation: blur-in 500ms ease-in forwards;
+  }
+
+  /* モーダルフェードインアニメーション */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* モーダルスライドアップアニメーション */
+  @keyframes slide-up {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}

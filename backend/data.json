@@ -1,0 +1,47 @@
+{
+  "photos": [
+    {
+      "id": 1,
+      "imageUrl": "/assets/images/1.jpg",
+      "caption": "写真1",
+      "fileSize": "1.1MB",
+      "createdAt": "2025-01-01 01:01:01"
+    },
+    {
+      "id": 2,
+      "imageUrl": "/assets/images/2.jpg",
+      "caption": "写真2",
+      "fileSize": "2.2MB",
+      "createdAt": "2025-02-02 02:02:02"
+    },
+    {
+      "id": 3,
+      "imageUrl": "/assets/images/3.jpg",
+      "caption": "写真3",
+      "fileSize": "3.3MB",
+      "createdAt": "2025-03-03 03:03:03"
+    }
+  ],
+  "themes": [
+    {
+      "id": "A",
+      "name": "テーマA",
+      "description": "写真とキャプションを直接表示する基本テーマ"
+    },
+    {
+      "id": "B",
+      "name": "テーマB",
+      "description": "写真がフェード切り替えで表示される"
+    },
+    {
+      "id": "C",
+      "name": "テーマC",
+      "description": "写真がぼかし切り替えで表示される"
+    }
+  ],
+  "settings": {
+    "themeId": "A",
+    "slideInterval": 500,
+    "playMode": "auto"
+  }
+}

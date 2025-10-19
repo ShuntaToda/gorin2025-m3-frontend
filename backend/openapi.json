@@ -1,0 +1,320 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "写真スライドショー API",
+    "version": "1.0.0",
+    "description": "3つのテーマに対応した写真スライドショーのためのバックエンドAPIです。写真は選択されたテーマに応じて500ms固定のアニメーション効果で表示されます。更新系APIは実際のデータ更新を行いませんが、正しいHTTPステータスコードを返します。"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "開発サーバー"
+    }
+  ],
+  "paths": {
+    "/photos": {
+      "get": {
+        "summary": "写真一覧取得",
+        "description": "スライドショー用の写真一覧を取得します",
+        "tags": ["写真"],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Photo"
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "imageUrl": "/assets/images/1.jpg",
+                    "caption": "写真1",
+                    "fileSize": "1.1MB",
+                    "createdAt": "2025-01-01 01:01:01"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/photos/{id}": {
+      "get": {
+        "summary": "写真詳細取得",
+        "description": "指定されたIDの写真詳細を取得します",
+        "tags": ["写真"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "写真ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Photo"
+                },
+                "example": {
+                  "id": 1,
+                  "imageUrl": "/assets/images/1.jpg",
+                  "caption": "写真1",
+                  "fileSize": "1.1MB",
+                  "createdAt": "2025-01-01 01:01:01"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "写真が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes": {
+      "get": {
+        "summary": "テーマ一覧取得",
+        "description": "利用可能なテーマの情報を取得します",
+        "tags": ["テーマ"],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Theme"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "A",
+                    "name": "テーマA",
+                    "description": "写真とキャプションを直接表示する基本テーマ"
+                  },
+                  {
+                    "id": "B",
+                    "name": "テーマB",
+                    "description": "写真がフェード切り替えで表示される"
+                  },
+                  {
+                    "id": "C",
+                    "name": "テーマC",
+                    "description": "写真がぼかし切り替えで表示される"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings": {
+      "get": {
+        "summary": "ユーザー設定取得",
+        "description": "現在選択中のテーマ、操作モード、スライド間隔を取得します",
+        "tags": ["設定"],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                },
+                "example": {
+                  "themeId": "A",
+                  "playMode": "auto",
+                  "slideInterval": 500
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "ユーザー設定保存",
+        "description": "ユーザー設定を保存します。実際にはデータベースの更新は行われませんが、正しいHTTPステータスコードを返します。",
+        "tags": ["設定"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Settings"
+              },
+              "example": {
+                "themeId": "B",
+                "slideInterval": 500,
+                "playMode": "auto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "バリデーションエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalidTheme": {
+                    "summary": "無効なテーマ",
+                    "value": {
+                      "error": "テーマはA、B、Cのいずれかを指定してください"
+                    }
+                  },
+                  "invalidInterval": {
+                    "summary": "無効なスライド間隔",
+                    "value": {
+                      "error": "スライド間隔は正の数値で指定してください"
+                    }
+                  },
+                  "invalidPlayMode": {
+                    "summary": "無効な操作モード",
+                    "value": {
+                      "error": "操作モードはautoまたはrandomを指定してください"
+                    }
+                  },
+                  "invalidJson": {
+                    "summary": "無効なJSON",
+                    "value": {
+                      "error": "JSONフォーマットが無効です"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Photo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "写真ID"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "画像URL"
+          },
+          "caption": {
+            "type": "string",
+            "description": "キャプション"
+          },
+          "fileSize": {
+            "type": "string",
+            "description": "ファイルサイズ"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "作成日時"
+          }
+        },
+        "required": ["id", "imageUrl", "caption", "fileSize", "createdAt"]
+      },
+      "Theme": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["A", "B", "C"],
+            "description": "テーマID"
+          },
+          "name": {
+            "type": "string",
+            "description": "テーマ名"
+          },
+          "description": {
+            "type": "string",
+            "description": "テーマ説明"
+          }
+        },
+        "required": ["id", "name", "description"]
+      },
+      "Settings": {
+        "type": "object",
+        "properties": {
+          "themeId": {
+            "type": "string",
+            "enum": ["A", "B", "C"],
+            "description": "選択中のテーマID"
+          },
+          "slideInterval": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "スライド間隔（ミリ秒）"
+          },
+          "playMode": {
+            "type": "string",
+            "enum": ["auto", "random"],
+            "description": "操作モード",
+            "default": "auto"
+          }
+        },
+        "required": ["themeId", "slideInterval"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "エラーメッセージ"
+          }
+        },
+        "required": ["error"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "写真",
+      "description": "写真関連のAPI"
+    },
+    {
+      "name": "テーマ",
+      "description": "テーマ関連のAPI"
+    },
+    {
+      "name": "設定",
+      "description": "設定関連のAPI"
+    }
+  ]
+}
